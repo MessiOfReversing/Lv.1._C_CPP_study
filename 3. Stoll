@@ -1,0 +1,88 @@
+문제 설명
+
+함수 solution은 정수 n을 매개변수로 입력받습니다. n의 각 자릿수를 큰것부터 작은 순으로 정렬한 새로운 정수를 리턴해주세요. 예를들어 n이 118372면 873211을 리턴하면 됩니다.
+제한 조건
+n은 1이상 8000000000 이하인 자연수입니다.
+입출력 예
+n	return
+118372	873211 
+
+
+
+#include <string>
+#include <vector>
+
+using namespace std;
+
+long long solution(long long n) {
+    long long answer = 0;
+    string num = to_string(n);
+    for(int i = 9; i >=1; i--){
+        string big = num.find(i);
+        if(big != n){answer += big;}
+    }
+    return answer;
+}
+
+
+
+뭘 수정해야할까요
+
+1. num.find(i)⁠의 오류
+⁠num⁠은 ⁠string⁠(문자열)인데, ⁠find()⁠ 함수에는 정수 ⁠i⁠가 아닌 문자 ⁠'0' ~ '9'⁠ 또는 문자열을 넣어줘야 합니다.
+또한 ⁠find()⁠는 해당 문자의 인덱스(위치)를 반환하지, 문자 자체를 반환하지 않습니다.
+찾지 못하면 ⁠string::npos⁠를 반환합니다. 따라서 ⁠string big = ...⁠ 형태로 저장할 수 없습니다.
+
+2. ⁠if(big != n)⁠의 오류
+⁠big⁠은 ⁠string⁠으로 선언하셨고 ⁠n⁠은 ⁠long long⁠ 정수입니다. 서로 다른 타입은 직접 비교할 수 없습니다.
+
+3. ⁠answer += big⁠의 오류
+⁠answer⁠는 숫자형(⁠long long⁠)인데 문자열인 ⁠big⁠을 더하려고 하면 올바른 자릿수 정렬이 되지 않고 문자의 아스키 코드 값이 더해지거나 컴파일 에러가 납니다.
+ 
+4. 반복문 범위
+자릿수에는 숫자 ⁠0⁠도 포함될 수 있는데, ⁠i >= 1⁠까지만 검사하면 ⁠0⁠이 누락됩니다.
+
+
+
+해결
+
+#include <string>
+#include <vector>
+#include <algorithm> // sort와 greater를 쓰기 위해 필요합니다.
+
+using namespace std;
+
+long long solution(long long n) {
+    string num = to_string(n);
+    sort(num.begin(), num.end(), greater<char>());
+    return stoll(num);
+}
+
+s to ll(long long) 이용함.
+
+세어도됨
+
+#include <string>
+#include <vector>
+
+using namespace std;
+
+long long solution(long long n) {
+    long long answer = 0;
+    string num = to_string(n);
+    
+    // 9부터 0까지 순서대로 확인 (0까지 확인해야 하므로 i >= 0)
+    for(int i = 9; i >= 0; i--){
+        // 정수 i를 문자(char)로 변환 ('9', '8', ... '0')
+        char target = i + '0'; 
+        
+        // 문자열 전체를 돌면서 해당 숫자가 있는지 확인
+        for(char c : num) {
+            if(c == target) {
+                // 기존 정답에 10을 곱해 자릿수를 하나 밀고, 현재 숫자를 더함
+                answer = answer * 10 + i;
+            }
+        }
+    }
+    return answer;
+}
