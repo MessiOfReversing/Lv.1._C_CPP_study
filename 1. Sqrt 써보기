@@ -1,0 +1,56 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int n) {
+    int answer = 0;
+    for(int i = 1; i <= n; i++){
+        if(n % i == 0){answer += i;}
+    }
+    return answer;
+}
+
+이게 내 풀이. 1부터 끝까지 다 확인하는 풀이.
+
+#include <cmath>
+int solution(int n) {
+    int answer = 0;
+    for(int i = 1; i <= sqrt(n); i++) 
+        answer += !(n%i) ? i == n/i ? i : i+n/i : 0;
+    return answer;
+}
+
+그리고 이게 추천수 가장 많은 풀이.
+
+16으로 예를들자면 
+1 x 16
+2 x 8
+4 x 4
+이후로는 8, 2  16, 1  이렇게 앞에서 한게 순서만 바뀌는것이니 제곱근까지만(16에서는 4) 확인해도 검증이 된다는 논리다.
+
+sqrt(n) 이게 루트n이다.
+
+삼향연산자는 별로 가독성이 좋지 않으니 내 코드랑 잘 섞는다면 풀이는 아래와같이 완성된다.
+
+#include <cmath>
+
+int solution(int n) {
+    int answer = 0;
+    
+    // n의 제곱근까지만 반복문을 돌립니다.
+    for (int i = 1; i <= sqrt(n); i++) {
+        
+        if (n % i == 0) { // 1. i가 n의 약수라면
+            
+            if (i == n / i) {
+                answer += i; // 2. '4'처럼 짝꿍이 자기 자신이면 하나만 더하기
+            } else {
+                answer += i + (n / i); // 3. '2와 8'처럼 서로 다른 짝꿍이면 둘 다 더하기
+            }
+            
+        }
+    }
+    
+    return answer;
+}
