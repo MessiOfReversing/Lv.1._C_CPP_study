@@ -1,0 +1,56 @@
+문제 설명
+
+자연수 N이 주어지면, N의 각 자릿수의 합을 구해서 return 하는 solution 함수를 만들어 주세요.
+예를들어 N = 123이면 1 + 2 + 3 = 6을 return 하면 됩니다.
+제한사항
+N의 범위 : 100,000,000 이하의 자연수
+입출력 예
+N	answer
+123	6
+987	24
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+int solution(int n)
+{
+    int answer = 0;
+    string num = to_string(n);
+    for(int i = 0; i < num.length(); i++){
+        answer += stoi(num[i]);
+    } 
+    return answer;
+}
+
+이게 안되는 이유가 뭘까요?
+stoi는 문자열에서만 쓰는거라 1바이트 캐릭터에서는 x
+
+굳이 쓰려면 
+answer += stoi(string(1, num[i])); 
+근데 그닥 좋지않음.
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int solution(int n)
+{
+    int answer = 0;
+    string num = to_string(n);
+    
+    for(int i = 0; i < num.length(); i++){
+        // 문자 '1', '2' 등에서 '0'을 빼서 실제 정수 1, 2로 변환합니다.
+        answer += (num[i] - '0'); 
+    } 
+    
+    return answer;
+}
+
+문자에서 '0' 빼면 디스어셈블했을때 
+문자 ⁠'0'⁠ = 아스키코드 ⁠48⁠
+문자 ⁠'1'⁠ = 아스키코드 ⁠49⁠
+문자 ⁠'2'⁠ = 아스키코드 ⁠50⁠
+문자 ⁠'3'⁠ = 아스키코드 ⁠51⁠ 로 되는데
+각각에서 48이 빠진다고 생각해보면 결과적으로 찍히는건 integer나 character나 차이없단걸 알 수 있다.
