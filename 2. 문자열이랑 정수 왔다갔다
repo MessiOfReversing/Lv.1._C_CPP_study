@@ -54,3 +54,17 @@ int solution(int n)
 문자 ⁠'2'⁠ = 아스키코드 ⁠50⁠
 문자 ⁠'3'⁠ = 아스키코드 ⁠51⁠ 로 되는데
 각각에서 48이 빠진다고 생각해보면 결과적으로 찍히는건 integer나 character나 차이없단걸 알 수 있다.
+
+물론 재귀로도 가능하다.
+
+
+#include <iostream>
+
+using namespace std;
+
+int solution(int n){
+    if (n == 0) return 0;
+    return (n % 10) + solution(n / 10);
+}
+
+더 쉽다. 그런데 디스어셈블해보면 call이 계속 호출할테니 상당히 비효율적이다.
