@@ -1,0 +1,84 @@
+문제 설명
+
+1937년 Collatz란 사람에 의해 제기된 이 추측은, 주어진 수가 1이 될 때까지 다음 작업을 반복하면, 모든 수를 1로 만들 수 있다는 추측입니다. 작업은 다음과 같습니다.
+1-1. 입력된 수가 짝수라면 2로 나눕니다. 
+1-2. 입력된 수가 홀수라면 3을 곱하고 1을 더합니다. 
+2. 결과로 나온 수에 같은 작업을 1이 될 때까지 반복합니다. 
+예를 들어, 주어진 수가 6이라면 6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1 이 되어 총 8번 만에 1이 됩니다. 위 작업을 몇 번이나 반복해야 하는지 반환하는 함수, solution을 완성해 주세요. 단, 주어진 수가 1인 경우에는 0을, 작업을 500번 반복할 때까지 1이 되지 않는다면 –1을 반환해 주세요.
+제한 사항
+입력된 수, num은 1 이상 8,000,000 미만인 정수입니다.
+입출력 예
+n	result
+6	8
+16	4
+626331	-1
+
+
+
+어?
+
+
+
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int num) {
+    int originalnum = num;
+    int answer = 0;
+    int count = 0;
+    while(1){
+        if(num % 2 == 0){num /= 2; count += 1;}
+        else{num = num * 3 + 1; count += 1;}
+        if(num == 1){break;}
+        if(count == 500 && num != 1){break;}
+    }
+    if(count == 500 || originalnum == 1){return -1;}
+    else{return count;}
+}
+
+
+
+여기서 뭘 수정해야하나요?
+
+1. 정수 오버플로우 (Integer Overflow)
+입력값 ⁠num⁠은 8,000,000 미만의 정수이지만, 홀수일 때 ⁠num * 3 + 1⁠을 반복하다 보면 ⁠int⁠ 타입이 표현할 수 있는 
+최대 범위(약 21억)를 넘어버리는 순간이 발생합니다. 대표적인 예시가 입출력 예시에 있는 ⁠626331⁠입니다.
+이 값이 커지다 보면 음수로 변하거나 엉뚱한 값이 되어 무한 루프에 빠지거나 잘못된 결과를 냅니다. 
+따라서 ⁠num⁠을 연산할 때는 더 큰 자료형인 ⁠long long⁠을 사용해야 합니다.
+
+2. 예외 조건 처리 (num이 1로 시작할 때)
+문제에서 "주어진 수가 1인 경우에는 0을 반환"하라고 했습니다.
+하지만 현재 코드에서는 ⁠originalnum == 1⁠일 때 ⁠-1⁠을 반환하도록 되어 있습니다. 
+그리고 ⁠num⁠이 1로 시작해도 ⁠while⁠문 안으로 들어가서 최소 1번은 연산을 수행하게 됩니다.
+
+3. 500번 초과 처리
+⁠count == 500⁠일 때 ⁠num⁠이 1이 아니면 ⁠-1⁠을 리턴해야 하는데, ⁠
+count⁠가 500이 되었을 때 딱 1이 되는 극적인 경우와 헷갈릴 수 있게 조건문이 복잡하게 꼬여 있습니다.
+
+수정코드
+
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int num) {
+    if (num == 1) return 0;
+    long long n = num; 
+    int count = 0;
+    while (n != 1 && count < 500) {
+        if (n % 2 == 0) {
+            n /= 2;
+        } else {
+            n = n * 3 + 1;
+        }
+        count++;
+    }
+    if (count >= 500 && n != 1) {
+        return -1;
+    }
+    return count;
+}
+
