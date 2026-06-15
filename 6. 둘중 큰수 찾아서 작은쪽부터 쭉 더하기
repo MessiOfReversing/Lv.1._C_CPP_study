@@ -1,0 +1,54 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+long long solution(int a, int b) {
+    long long sum = 0;
+    if(a < b){
+        for(int i = a; i <= b; i++){
+            sum += i;
+        } return sum; 
+    }
+    else if(a > b){
+        for(int j = b; j <= a; j++){
+            sum += j;
+        } return sum;
+    }
+    else{return a;}
+}
+
+이거 싫어
+아래같이 하자
+
+#include <string>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+long long solution(int a, int b) {
+    return (long long)(a + b) * (abs(a - b) + 1) / 2;
+}
+
+abs는 절댓값을 구하는 함수
+
+또 있음.
+
+#include <algorithm> // min, max를 사용하기 위함
+
+using namespace std;
+
+long long solution(int a, int b) {
+    long long sum = 0;
+    
+    // a와 b 중 작은 값과 큰 값을 자동으로 구함
+    int start = min(a, b);
+    int end = max(a, b);
+    
+    for (int i = start; i <= end; i++) {
+        sum += i;
+    }
+    
+    return sum;
+}
