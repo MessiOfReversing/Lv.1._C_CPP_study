@@ -1,0 +1,75 @@
+문제 설명
+
+양의 정수 x가 하샤드 수이려면 x의 자릿수의 합으로 x가 나누어져야 합니다. 예를 들어 18의 자릿수 합은 1+8=9이고, 18은 9로 나누어 떨어지므로 18은 하샤드 수입니다. 자연수 x를 입력받아 x가 하샤드 수인지 아닌지 검사하는 함수, solution을 완성해주세요.
+제한 조건
+x는 1 이상, 10000 이하인 정수입니다.
+입출력 예
+x	return
+10	true
+12	true
+11	false
+13	false 
+
+#include <string>
+#include <vector>
+
+using namespace std;
+
+bool solution(int x) {
+    int originalx = x;
+    int sum = 0;
+    while(x == 0){
+        sum += x % 10; return solution(x / 10);
+    }
+    if(originalx % sum == 0){return true;}
+    else{return false;}
+}
+
+
+
+이렇게 시도했는데 어떻게 수정해야 좋을까요
+
+
+
+bool solution(int x) {
+    int originalx = x;
+    int sum = 0;
+    while(x == 0){ // ❌ 문제 1: x가 0일 때만 반복문이 실행됩니다. 
+                   // 입력값이 10, 12 같은 양수이므로 이 반복문은 아예 실행되지 않고 건너뜁니다.
+        sum += x % 10; 
+        return solution(x / 10); // ❌ 문제 2: 반복문 안에서 뜬금없이 함수 자기 자신을 호출(재귀)하고 종료해버립니다.
+                                 // 자릿수를 다 더하기도 전에 함수가 끝나버리는 결과를 초래합니다.
+    }
+    if(originalx % sum == 0){return true;} // ❌ 문제 3: 위 반복문이 실행되지 않아 sum은 여전히 0입니다.
+                                           // 컴퓨터는 0으로 나누는 연산(originalx % 0)을 할 수 없어 런타임 에러(Crash)가 발생합니다.
+    else{return false;}
+}
+
+
+
+
+#include <string>
+#include <vector>
+
+using namespace std;
+
+bool solution(int x) {
+    int originalx = x;
+    int sum = 0;
+    
+    // x가 0보다 큰 동안 계속 자릿수를 잘라냅니다.
+    while (x > 0) {
+        sum += x % 10; // 가장 뒷자리 숫자를 sum에 더함
+        x /= 10;       // 숫자를 10으로 나누어 뒷자리를 제거
+    }
+    
+    // 원래 숫자가 자릿수 합(sum)으로 나누어 떨어지는지 확인
+    if (originalx % sum == 0) {
+        return true;
+    } else {
+        return false;
+    }
+    
+    // 아래처럼 한 줄로 더 축약할 수도 있습니다.
+    // return (originalx % sum == 0);
+}
