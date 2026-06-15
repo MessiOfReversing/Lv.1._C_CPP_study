@@ -1,0 +1,62 @@
+문제 설명
+
+임의의 양의 정수 n에 대해, n이 어떤 양의 정수 x의 제곱인지 아닌지 판단하려 합니다.
+n이 양의 정수 x의 제곱이라면 x+1의 제곱을 리턴하고, n이 양의 정수 x의 제곱이 아니라면 -1을 리턴하는 함수를 완성하세요.
+제한 사항
+n은 1이상, 50000000000000 이하인 양의 정수입니다.
+입출력 예
+n	return
+121	144
+3	-1
+
+#include <string>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+long long solution(long long n) {
+    if(sqrt(n) != sqrt(n+1) / 1 && sqrt(n) != sqrt(n-1) / 1){
+        return pow(sqrt(n) + 1, 2);
+    }
+    else {return -1;}
+}
+
+3같은건 1.7,,, 인데 2랑 정수부분은 같다. 즉 틀린 논리라서 오답.
+
+수정1
+
+#include <cmath>
+
+using namespace std;
+
+long long solution(long long n) {
+    // 1. n의 제곱근을 구해서 정수형(long long) 변수에 저장 (소수점 아래는 버려짐)
+    long long x = sqrt(n);
+    
+    // 2. 다시 제곱했을 때 n이 되는지 확인
+    if (x * x == n) {
+        // 맞다면 (x + 1)의 제곱을 반환
+        return (x + 1) * (x + 1);
+    } else {
+        // 아니라면 -1 반환
+        return -1;
+    }
+}
+
+수정2
+
+#include <cmath>
+
+using namespace std;
+
+long long solution(long long n) {
+    double r = sqrt(n);
+    
+    // 1로 나눈 나머지가 0이면 정수라는 뜻입니다.
+    if (fmod(r, 1.0) == 0) {
+        return pow(r + 1, 2);
+    }
+    
+    return -1;
+}
